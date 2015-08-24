@@ -1,0 +1,141 @@
+
+/* CSS for base html dom elements */
+header{
+    width: 100%;
+    height: 80px;
+    background-color: black;
+    position: absolute;
+    z-index: 1;
+}
+#logo{
+    position: absolute;
+    height: 28px;
+    margin: 26px 0px 26px 40px
+}
+.search-box{
+    position: absolute;
+    margin-right: 26px;
+    margin-top: 28px;
+    margin-bottom: 28px;
+    top: 0px;
+    right: 0px;
+}
+
+/* START => CSS for responsive grid layout */
+.col{
+    display: -moz-inline-stack;
+    display: inline-block !important;
+    *display: inline;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+    vertical-align: top;
+    float: left;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+    height: 100%;
+}
+.col-1{
+    width:  8.33333333%;
+}
+.col-2{
+    width: 16.66666667%;
+}
+.col-3{
+    width: 25%;
+}
+.col-4{
+    width: 33.33333333%;
+}
+.col-5{
+    width: 41.66666667%;
+}
+.col-6{
+    width: 50%;
+}
+.col-7{
+    width: 58.33333333%;
+}
+.col-8{
+    width: 66.66666667%;
+}
+.col-9{
+    width: 75%;
+}
+.col-10{
+    width: 83.33333333%;
+}
+.col-11{
+    width: 91.66666667%;
+}
+.col-12{
+    width: 100%;
+}
+.col-md-offset-12 {
+    margin-left: 100%;
+}
+.col-md-offset-11 {
+    margin-left: 91.66666667%;
+}
+.col-md-offset-10 {
+    margin-left: 83.33333333%;
+}
+.col-md-offset-9 {
+    margin-left: 75%;
+}
+.col-md-offset-8 {
+    margin-left: 66.66666667%;
+}
+.col-md-offset-7 {
+    margin-left: 58.33333333%;
+}
+.col-md-offset-6 {
+    margin-left: 50%;
+}
+.col-md-offset-5 {
+    margin-left: 41.66666667%;
+}
+.col-md-offset-4 {
+    margin-left: 33.33333333%;
+}
+.col-md-offset-3 {
+    margin-left: 25%;
+}
+.col-md-offset-2 {
+    margin-left: 16.66666667%;
+}
+.col-md-offset-1 {
+    margin-left: 8.33333333%;
+}
+.col-md-offset-0 {
+    margin-left: 0;
+}
+/* END => CSS for responsive grid layout */
+
+
+
+
+
+
+
+
+
+
+
+
+@media screen and (max-width: 840px) {
+    .col-md-offset-1 {
+        margin-left: 0%;
+    }
+    .col-10, .col-11{
+        width: 100%;
+    }
+}
+
+
+
+
