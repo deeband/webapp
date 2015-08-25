@@ -17,20 +17,31 @@
         <![endif]-->
         <header>
           <div class="col col-10 col-md-offset-1">
-            <a href="#" tabindex="0">
+            <a href="#" ng-click="selectTab(0);">
                 <img id="logo" src="img/netcraft-logo.png" alt="netcraft">
             </a>
             <form class="search-box" role="search">
-                <input type="search" name="q" placeholder="search" tabindex="0">
+                <input class="bottom-border-highlighted" type="search" name="q" ng-model="searchText" ng-enter="searchForText(searchText);" placeholder="Search" tabindex="0">
             </form>
           </div>
         </header>
+        <div id="page-loader" class="animate-fast"></div>
+        <div id="main-container" class="col col-10 col-md-offset-1 transparet animate-fast">
+            <div id="notification-container" class="animate-hide box ellipsis-text" ng-show="notification && notification.message" >
+                <img class="icon-image" src="img/notification.png" />{{notification.message}}
+            </div>
+            <div id="top-buttons-container">
+                <div class="top-button" ng-repeat="buttons in topButtons">
+                    
+                </div>
+            </div>
+        </div>
         
 
         <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
         <script type="text/javascript" src="js/jquery-migrate-1.2.1.min.js"></script>
         <script src="js/angular.min.js"></script>
-        <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
+        <script src="js/plugins.js"></script>
     </body>
 </html>
