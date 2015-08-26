@@ -34,7 +34,7 @@
 			 */
 			animatePageLoad: function(percentage, callback){
 				if(percentage){
-					$('#page-loader').css('width',percentage+"%");
+					$('#page-loader').css('width',"25%");
 				}else{
 					$timeout(function(){$('#page-loader').css('width',"90%");$timeout(function(){$('#page-loader').css('width',"100%");$timeout(function(){
 						$('#page-loader').hide();
@@ -59,7 +59,87 @@
 						callback(null);
 					}
 				);
-			}
+			},
+
+			/**
+			 * Gets hash text from location and return related tab number
+			 * @return {Number} Related tab number
+			 */
+			getHashTabNumber : function(){
+				switch (window.location.hash){
+					case "#quick-reports":
+						return 0;
+					break;
+					case "#fmy-folders":
+						return 1;
+					break;
+					case "#my-team-folders":
+						return 2;
+					break;
+					case "#public-folders":
+						return 3;
+					break;
+					default:
+						return 0;  // Default selected tab when page finish laod
+					break;
+				}
+			},
+
+			/**
+			 * Set location hash by tab number
+			 * @param {Number} tabNumber Related tab number
+			 */
+			setHash : function(tabNumber){
+				// Update location hash
+				var stringHash;
+				switch (tabNumber){
+					case 0:
+						stringHash = "#quick-reports";
+					break;
+					case 1:
+						stringHash = "#fmy-folders";
+					break;
+					case 2:
+						stringHash = "#my-team-folders";
+					break;
+					case 3:
+						stringHash = "#public-folders";
+					break;
+					default:
+						stringHash = "#quick-reports";  // Default selected tab when page finish laod
+					break;
+				}
+				$("<a href='"+stringHash+"'></a>")[0].click();
+			},
+
+			/**
+			 * Check if there is data in localstorage
+			 * @param  {String} tabType Tab type to request data by
+			 * @return {TabObject}         
+			 */
+			checkStoredUrls: function(tabType){
+				try{
+					return JSON.parse(localStorage["WebApp"])[tabType];
+				}catch(e){
+					return {
+						urls: this.defaultUrlContent,
+						selectedUrl: -1,
+						editing: true
+					};
+				}
+			},
+
+			defaultUrlContent:[{
+				"url":"",
+				"title":""
+			},{
+				"url":"",
+				"title":""
+			},{
+				"url":"",
+				"title":""
+			}]
+
 		}
 	}])
 
@@ -73,8 +153,12 @@
 				elem.bind('keydown', function(e) {
 					var code = e.keyCode || e.which;
 					if (code === 13) {
-						$('.top-button').removeClass("hovered");
-						$(elem).addClass('hovered');
+						if($(elem).hasClass('hovered')){
+							$('.top-button').removeClass("hovered");
+						}else{
+							$('.top-button').removeClass("hovered");
+							$(elem).addClass('hovered');
+						}
 						e.preventDefault();
 					}
 				});
@@ -111,6 +195,15 @@
 				});
 			}
 		}
+	})
+
+	/**
+	 * Tab factory used to favorite urls tabs
+	 */
+	.factory('Tab', function(){
+		return function name(){
+			
+		};
 	});
 })(window.angular);
 

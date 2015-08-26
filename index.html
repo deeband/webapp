@@ -26,24 +26,99 @@
           </div>
         </header>
         <div id="page-loader" class="animate-fast"></div>
-        <div id="main-container" class="col col-10 col-md-offset-1 transparet animate-fast">
-            
-            <div id="notification-container" ng-style="notification.style" class="animate-hide box ellipsis-text" ng-show="notification && notification.message" >
-                <img class="icon-image" src="img/notification.png" />
-                {{notification.message}}
-            </div>
+        <div id="scrollable-body">
+            <div id="main-container" class="col col-10 col-md-offset-1 transparet animate-fast">
+                
+                <div id="notification-container" ng-style="notification.style" class="animate-hide box ellipsis-text" ng-show="notification && notification.message" >
+                    <img class="icon-image" src="img/notification.png" />
+                    {{notification.message}}
+                </div>
 
-            <div id="top-buttons-container" class="row">
-                <div class="col top-button" ng-enter-hover ng-hover tabindex="0" ng-style="quickAction.icon" ng-repeat="quickAction in topButtons">
-                    <p class="title" ng-bind-html="quickAction.label"></p>
-                    <div class="drop-down-menu row">
-                        <div class="default-option" ng-bind-html="quickAction.actionsLabel"></div>
+                <div id="top-buttons-container" class="row">
+                    <div class="col top-button" ng-enter-hover ng-hover tabindex="0" ng-style="quickAction.icon" ng-repeat="quickAction in topButtons">
+                        <p class="title" ng-bind-html="quickAction.label"></p>
+                        <div class="drop-down-menu row">
+                            <div class="default-option" ng-bind-html="quickAction.actionsLabel"></div>
+                        </div>
+                        <ul class="drop-down-options animate-slow">
+                            <li ng-repeat="action in quickAction.actions" class="clickable">
+                                <a href="{{action.url}}" ng-enter-link tabindex="0" target="_blank" ng-bind-html="action.label"></a>
+                            </li>
+                        </ul>
                     </div>
-                    <ul class="drop-down-options animate-slow">
-                        <li ng-repeat="action in quickAction.actions">
-                            <a href="{{action.url}}" ng-enter-link tabindex="0" target="_blank" ng-bind-html="action.label"></a>
-                        </li>
-                    </ul>
+                </div>
+                <div id="tabs-container">
+                    <div class="tab-buttons row">
+                        <a href="#quick-reports" style="{{((selectedTab == 0)?'background-color:#D3D3D3 !important;color:rgb(40,40,40);':'')}}" class="button col clickable">
+                            <i class="icon-external-link"></i>
+                            <p>Quick Reports</p>
+                        </a>
+                        <a href="#fmy-folders" style="{{((selectedTab == 1)?'background-color:#D3D3D3 !important;color:rgb(40,40,40);':'')}}" class="button col clickable">
+                            <i class="icon-star-o"></i>
+                            <p>My Folders</p>
+                        </a>
+                        <a href="#my-team-folders" style="{{((selectedTab == 2)?'background-color:#D3D3D3 !important;color:rgb(40,40,40);':'')}}" class="button col clickable">
+                            <i class="icon-folder-open-o"></i>
+                            <p>My Team Folders</p>
+                        </a>
+                        <a href="#public-folders" style="{{((selectedTab == 3)?'background-color:#D3D3D3 !important;color:rgb(40,40,40);':'')}}" class="button col clickable">
+                            <i class="icon-copy"></i>
+                            <p>Public Folders</p>
+                        </a>
+                    </div>
+                    <div class="tabs-contentainer" ng-switch="selectedTab">
+                        <div class="tab-content" ng-switch-when="0">
+                            <div class="tab-controllers row">
+                                <select class="{{'drop-down-urls '+((tabs.quickReport.selectedUrl != -1)?'':'invisible')}}">
+                                    <option selected="selected" value="http://google.com">google</option>
+                                    <option value="http://busportal.parseapp.com">busportal</option>
+                                </select>
+                                <div class="{{'open-newtab-button '+((tabs.quickReport.selectedUrl != -1)?'':'invisible')}}" tabindex="0" ng-click="openNewTab(tabs.quickReport.urls[tabs.quickReport.selectedUrl].url)">
+                                    <img src="img/expand.png" />
+                                </div>
+                                <div  class="tab-settings-button" tabindex="0">
+                                    <img src="img/settings.png" />
+                                </div>
+                            </div>
+                            <div class="{{'urls-manager '+((tabs.quickReport.editing == ture)?'editing':'')}}">
+                                <div class="Report-container row">
+                                    
+                                </div>
+                                <div class="Report-container row">
+                                    
+                                </div>
+                                <div class="Report-container row">
+                                    
+                                </div>
+                            </div>
+                            <div class="row">
+                                <iframe class="{{'tab-iframe '+((tabs.quickReport.selectedUrl != -1)?'':'invisible')}}" ng-src="{{((tabs.quickReport.selectedUrl != -1)?tabs.quickReport.urls[tabs.quickReport.selectedUrl].url:'')}}"></iframe>
+                            </div>
+                        </div>
+                        <div class="tab-content" ng-switch-when="1">
+                            <div class="tab-controllers row">
+                                <div class="open-newtab-button" style="right:0px" ng-click="openNewTab(tabs.myFolders)" tabindex="0">
+                                    <img src="img/expand.png" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <iframe ng-src="{{getUrl(tabs.myFolders)}}" class="tab-iframe" ></iframe>
+                            </div>
+                        </div>
+                        <div class="tab-content" ng-switch-when="2">
+                            Team Folders
+                        </div>
+                        <div class="tab-content" ng-switch-when="3">
+                            <div class="tab-controllers row">
+                                <div class="open-newtab-button" style="right:0px" ng-click="openNewTab(getUrl(tabs.publicFolders))" tabindex="0">
+                                    <img src="img/expand.png" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <iframe ng-src="{{getUrl(tabs.publicFolders)}}" class="tab-iframe" ></iframe>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
