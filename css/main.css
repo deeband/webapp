@@ -1,3 +1,15 @@
+/****************/
+/* IMPORT FONTS */
+/****************/
+
+@font-face {
+    font-family: 'icons';
+    src:url('../fonts/icons.eot?-3a50i6');
+    src: url('../fonts/icons.eot?#iefix-3a50i6') format('embedded-opentype'),url('../fonts/icons.woff?-3a50i6') format('woff'),url('../fonts/icons.ttf?-3a50i6') format('truetype'),url('../fonts/icons.svg?-3a50i6#icons') format('svg');
+    font-weight:normal;
+    font-style:normal;
+}
+
 
 /**********************************/
 /* CSS for responsive grid layout */
@@ -123,6 +135,9 @@
 .hidden{
     display: none;
 }
+.invisible{
+    visibility: hidden;
+}
 
 .transparet{
     opacity: 0;
@@ -145,7 +160,13 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.clickable{
+    cursor: pointer;
+}
 
+.errorHighlight{
+    
+}
 
 
 /**********************************/
@@ -171,6 +192,10 @@ body{
 body :focus {
     outline: none;
     background-color: orange !important;
+}
+a.button:focus{
+    background-color: #D3D3D3 !important;  
+    color: rgb(40,40,40); 
 }
 
 
@@ -224,6 +249,8 @@ body :focus {
 /* CSS quick actions elements */
 #top-buttons-container{
     padding: 14px 0;
+    position: relative;
+    z-index: 10;
 }
 .top-button{
     background: black;
@@ -262,6 +289,7 @@ body :focus {
     bottom: 0px;
     border: 1px solid lightgrey;
     border-bottom: 0px;
+    overflow: hidden;
 }
 .drop-down-menu .drop-arrow{
     position: absolute;
@@ -290,12 +318,14 @@ body :focus {
     position: absolute;
     margin: 0;
     padding: 0;
+    box-shadow: 1px 1px 9px 1px rgba(0,0,0,.4);
 }
 
 .drop-down-options > li {
     height: 35px;
     line-height: 35px;
     padding: 0px 20px;
+    overflow: hidden;
 }
 .drop-down-options > li > a{
     border-bottom: 1px solid lightgrey;
@@ -314,27 +344,164 @@ body :focus {
     max-height: 500px;
 }
 
+/**************************/
+/* CSS web app entry tabs */
+/**************************/
+
+#tabs-container{
+    width: 100%;
+    position: relative;
+    z-index: 5;
+    margin-bottom: 25px;
+}
+.tab-buttons{
+    height: 40px;
+}
+.tab-buttons > .button{
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    background: #333;
+    color: white;
+    overflow: hidden;
+    margin: 0 15px;
+}
+.tab-buttons > .button  p{
+    margin: 0px;
+    display: inline-block;
+}
+
+
+.tabs-contentainer{
+    min-height: 600px;
+    margin: 0 15px;
+    background-color: lightgrey;
+    position: relative;
+    padding: 25px;
+}
+
+.tab-content{
+    position: relative;
+    height: 600px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.tab-iframe{
+    width: 100%;
+    height: 550px;
+    position: absolute;
+    border: 0;
+    top: 50px;
+}
+
+.tab-controllers{
+    position: relative;
+    height: 40px;
+    margin-bottom: 0px;
+}
+
+.drop-down-urls{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url('../img/arrow.png') right no-repeat;
+    background-position: 95% 50%;
+    background-color: white;
+    float: left;
+    height: 35px;
+    border: 0;
+    border-radius: 0;
+    padding: 0 20px;
+    width: 238px;
+    position: relative;
+}
+
+.tab-settings-button, .open-newtab-button{
+    cursor: pointer;
+    display: block;
+    height: 40px;
+    width: 40px;
+    overflow: hidden;
+    position: absolute;
+    right: 40px;
+    top: 10px;
+}
+
+.tab-settings-button{
+    background: white;
+    right: 0;
+}
+
+.tab-settings-button > img{
+    padding: 9px;
+    width: 23px;
+}
+.open-newtab-button > img{
+    width: 50%;
+    margin: 25%;
+}
+
+.urls-manager{
+    position: absolute;
+}
+
+.urls-manager.editing{
+
+}
 
 
 
+/*********************/
+/*  C SS for icons   */
+/*********************/
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'icons';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.icon-external-link:before {
+    content: "\f08e";
+}
+.icon-star-o:before{
+    content: "\f006";
+}
+.icon-folder-open-o:before{
+    content: "\f115";
+}
+.icon-copy:before{
+    content: "\f0c5";
+}
 
 /*******************************/
 /* CSS media diff screen sizes */
 /*******************************/
 @media screen and (max-width: 1080px) {
-    .top-button{
+    .top-button, .tab-buttons > .button{
         margin: 0 15px;
     }
-}
-@media screen and (max-width: 840px) {
+    .icon-*{
+        left: 10%;
+    }
     .col-md-offset-1 {
         margin-left: 0%;
     }
     .col-10, .col-11{
         width: 100%;
     }
-    .top-button{
+}
+@media screen and (max-width: 840px) {
+    
+    .top-button, .tab-buttons > .button, .tabs-contentainer{
         margin: 0 10px;
     }
+    .icon-*{
+        left: 2%;
+    }
+
 }
 

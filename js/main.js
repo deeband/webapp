@@ -1,13 +1,13 @@
 (function(angular) {
   	'use strict';
   	angular.module('WebApp', ['ngSanitize']);
-	angular.module('WebApp').controller('MainCtrl', ["$rootScope", "$scope", "$timeout", "UTILS", 
-		function($rootScope, $scope, $timeout, UTILS){
+	angular.module('WebApp').controller('MainCtrl', ["$rootScope", "$scope", "$sce", "$timeout", "$window", "UTILS",
+		function($rootScope, $scope, $sce, $timeout, $window, UTILS){
 
 		$scope.selectedTab;   			// Holding selected tab
 		$scope.notification;  			// Holding notification data
 		$scope.topButtons;	  			// Holding buttons description and links
-		$scope.tabs;	 	  			// Holding tabs data
+		$scope.tabs = {};	 	  			// Holding tabs data
 		$scope.appInitialized = false;	// Hide binding data before initlized
 
 		/**
@@ -17,12 +17,13 @@
 			// Start animating loader
 			UTILS.animatePageLoad(true);
 
-
-			$scope.selectedTab = 0;  // Default selected tab when page finish laod
 			$scope.notification = {};
 			$scope.topButtons = [];
-			$scope.tabs = [];
+			$scope.tabs = {};
 
+			// Check url hash tag
+			$scope.selectedTab = UTILS.getHashTabNumber();
+			UTILS.setHash($scope.selectedTab);
 
 			// Load 
 			UTILS.loadJsonData(function(data){
@@ -52,7 +53,10 @@
 					// Fill tabs 
 					// Get related tabs links
 					// Check if there is old stored content in local storage
-
+					$scope.tabs["quickReport"] = UTILS.checkStoredUrls("quickReport");
+					$scope.tabs["myFolders"] = data.tabsList[1].options.url;
+					$scope.tabs["myTeamFolders"] = UTILS.checkStoredUrls("myTeamFolders");
+					$scope.tabs["publicFolders"] = data.tabsList[3].options.url;
 
 
 				}else{
@@ -63,11 +67,35 @@
 							"color":"rgb(234, 47, 64)"
 						}
 					};
+
+					$scope.tabs = { // default data for tabs
+						"quickReport":{
+							urls: UTILS.defaultUrlContent,
+							selectedUrl: -1,
+							editing: true
+						},
+						"myFolders":"",
+						"myTeamFolders":{
+							urls: UTILS.defaultUrlContent,
+							selectedUrl: -1,
+							editing: true
+						},
+						"publicFolders":""
+					};
 				}
+
+
 
 				// Init focus tabs
 				$('.top-button > .drop-down-options > li:last-child a').live('blur', function(e){
 					$(this).parents(".top-button").removeClass('hovered');
+				});
+
+				// Init watch event for location hash
+				$($window).bind('hashchange', function () {
+					$scope.$apply(function(){
+						$scope.selectedTab = UTILS.getHashTabNumber();
+					});
 				});
 
 				// Animate page load
@@ -80,16 +108,40 @@
 
 		/**
 		 * Change selected tab and initialize it's content
-		 * @param  {Number} tabNumber Tab number between 1-4
+		 * @param  {Number} tabNumber Tab number between 0-3
 		 */
 		$scope.selectTab = function(tabNumber){
 			if(UTILS.isNumber(tabNumber)){
-				$scope.selectTab = tabNumber;
+				if(tabNumber > 3 || tabNumber < 0)
+					UTILS.setHash(tabNumber);
+				else
+					UTILS.setHash(0);	
 			}else{
 				// Select default tab
-				$scope.selectTab = 0;
+				UTILS.setHash(0);
 			}
 		}
+
+		/**
+		 * Get valid url. angularjs library
+		 * @param  {String} url Url to check
+		 * @return {String}     url if is valid URL else ''
+		 */
+		$scope.getUrl = function(url){
+			return $sce.trustAsResourceUrl(url);
+		}
+
+
+		$scope.openNewTab = function(url){
+			$('<a href="'+$scope.getUrl(url)+'" target="_blank"></a>')[0].click();
+		}
+
+
+
+
+
+
+
 	}]);
 })(window.angular);
 
