@@ -69,30 +69,59 @@
                     <div class="tabs-contentainer" ng-switch="selectedTab">
                         <div class="tab-content" ng-switch-when="0">
                             <div class="tab-controllers row">
-                                <select class="{{'drop-down-urls '+((tabs.quickReport.selectedUrl != -1)?'':'invisible')}}">
-                                    <option selected="selected" value="http://google.com">google</option>
-                                    <option value="http://busportal.parseapp.com">busportal</option>
+                                <select ng-model="tabs.quickReport.selectedUrl" class="{{'drop-down-urls '+((getUrlsNonEmpty(tabs.quickReport.urls).length != 0)?'':'invisible')}}">
+                                    <option value="-1">Select URL</option>
+                                    <option ng-repeat="url in getUrlsNonEmpty(tabs.quickReport.urls)" value="{{url.url}}" ng-click="tabs.quickReport.selectedUrl = url.url;">{{url.title}}</option>
                                 </select>
-                                <div class="{{'open-newtab-button '+((tabs.quickReport.selectedUrl != -1)?'':'invisible')}}" tabindex="0" ng-click="openNewTab(tabs.quickReport.urls[tabs.quickReport.selectedUrl].url)">
+                                <div class="{{'open-newtab-button '+((tabs.quickReport.selectedUrl != -1)?'':'invisible')}}" tabindex="0" ng-click="openNewTab(tabs.quickReport.selectedUrl)">
                                     <img src="img/expand.png" />
                                 </div>
-                                <div  class="tab-settings-button" tabindex="0">
+                                <div class="tab-settings-button" ng-click="toggleEditing('quickReport');" tabindex="0">
                                     <img src="img/settings.png" />
                                 </div>
                             </div>
-                            <div class="{{'urls-manager '+((tabs.quickReport.editing == ture)?'editing':'')}}">
-                                <div class="Report-container row">
+                            <div class="{{'urls-manager animate-slow '+(( checkUrls(tabs.quickReport.urls) == true || tabs.quickReport.editing == true)?'editing':'')}}">
+                                <div class="report-container row">
+                                    <div class="col report-row-title">Report 1:</div>
+                                    <div class="col" style="min-width: 305px; text-align: right;">
+                                        <p class="report-name">Name</p>
+                                        <input id="reportName1" class="report-input" type="text" placeholder="Site name"/>
+                                    </div>
+                                    <div class="col" style="min-width: 305px;">
+                                        <p class="report-name">URL</p>
+                                        <input id="reportURL1" class="report-input" type="text" placeholder="Site name"/>
+                                    </div>
                                     
                                 </div>
-                                <div class="Report-container row">
-                                    
+                                <div class="report-container row">
+                                    <div class="col report-row-title">Report 2:</div>
+                                    <div class="col" style="min-width: 305px; text-align: right;">
+                                        <p class="report-name">Name</p>
+                                        <input id="reportName2" class="report-input" type="text" placeholder="Site name"/>
+                                    </div>
+                                    <div class="col" style="min-width: 305px;">
+                                        <p class="report-name">URL</p>
+                                        <input id="reportURL2" class="report-input" type="text" placeholder="Site name"/>
+                                    </div>
                                 </div>
-                                <div class="Report-container row">
-                                    
+                                <div class="report-container row">
+                                    <div class="col report-row-title">Report 3:</div>
+                                    <div class="col" style="min-width: 305px; text-align: right;">
+                                        <p class="report-name">Name</p>
+                                        <input id="reportName3" class="report-input" type="text" placeholder="Site name"/>
+                                    </div>
+                                    <div class="col" style="min-width: 305px;">
+                                        <p class="report-name">URL</p>
+                                        <input id="reportURL3" class="report-input" type="text" placeholder="Site name"/>
+                                    </div>
+                                </div>
+                                <div class="submit-container">
+                                    <div class="cancel-button" ng-click="cancelEditUrls('quickReport')">Cancel</div>
+                                    <div class="save-button" ng-click="saveEditUrls('quickReport')">Save</div>
                                 </div>
                             </div>
                             <div class="row">
-                                <iframe class="{{'tab-iframe '+((tabs.quickReport.selectedUrl != -1)?'':'invisible')}}" ng-src="{{((tabs.quickReport.selectedUrl != -1)?tabs.quickReport.urls[tabs.quickReport.selectedUrl].url:'')}}"></iframe>
+                                <iframe class="{{'tab-iframe '+((tabs.quickReport.selectedUrl != -1)?'':'invisible')}}" ng-src="{{((tabs.quickReport.selectedUrl != -1)? getUrl(tabs.quickReport.selectedUrl):'')}}"></iframe>
                             </div>
                         </div>
                         <div class="tab-content" ng-switch-when="1">

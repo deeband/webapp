@@ -131,15 +131,114 @@
 			return $sce.trustAsResourceUrl(url);
 		}
 
-
+		/**
+		 * Open specific url in new tab
+		 * @param  {String} url Url to open
+		 */
 		$scope.openNewTab = function(url){
 			$('<a href="'+$scope.getUrl(url)+'" target="_blank"></a>')[0].click();
 		}
 
+		/**
+		 * Check if url-manager urls empty
+		 */
+		$scope.checkUrls = function(urlsArray){
+			if(urlsArray)
+				return (urlsArray[0].title == "" && urlsArray[1].title == "" && urlsArray[2].title == "");
+			else
+				return true;
+		}
+
+		$scope.cancelEditUrls = function(action){
+			switch(action){
+				case "quickReport":
+					$scope.tabs.quickReport.editing = false;
+					$("#reportName1").val($scope.tabs.quickReport.urls[0].title);
+					$("#reportURL1").val($scope.tabs.quickReport.urls[0].url);
+					$("#reportName2").val($scope.tabs.quickReport.urls[1].title);
+					$("#reportURL2").val($scope.tabs.quickReport.urls[1].url);
+					$("#reportName3").val($scope.tabs.quickReport.urls[2].title);
+					$("#reportURL3").val($scope.tabs.quickReport.urls[2].url);
+				break;
+				case "myTeamFolders":
+					$("#reportName1").val($scope.tabs.myTeamFolders.urls[0].title);
+					$("#reportURL1").val($scope.tabs.myTeamFolders.urls[0].url);
+					$("#reportName2").val($scope.tabs.myTeamFolders.urls[1].title);
+					$("#reportURL2").val($scope.tabs.myTeamFolders.urls[1].url);
+					$("#reportName3").val($scope.tabs.myTeamFolders.urls[2].title);
+					$("#reportURL3").val($scope.tabs.myTeamFolders.urls[2].url);
+				break;
+				default: break;
+			}
+		}
+		$scope.saveEditUrls = function(action){
+			switch(action){
+				case "quickReport":
+					$scope.tabs.quickReport.editing = false;
+					$scope.tabs.quickReport.urls = [{
+						title: $("#reportName1").val(),
+						url: $("#reportURL1").val()
+					},{
+						title: $("#reportName2").val(),
+						url: $("#reportURL2").val()
+					},{
+						title: $("#reportName3").val(),
+						url: $("#reportURL3").val()
+					}];
+				break;
+				case "myTeamFolders":
+					$scope.tabs.myTeamFolders.editing = false;
+					$scope.tabs.myTeamFolders.urls = [{
+						title: $("#teamFolderName1").val(),
+						url: $("#teamFolderURL1").val()
+					},{
+						title: $("#teamFolderName2").val(),
+						url: $("#teamFolderURL2").val()
+					},{
+						title: $("#teamFolderName3").val(),
+						url: $("#teamFolderURL3").val()
+					}];
+				break;
+				default: break;
+			}
+			UTILS.saveContentInLocalStorage($scope.tabs);
+		}
+
+		$scope.toggleEditing = function(action){
+			switch(action){
+				case "quickReport":
+					if($scope.tabs.quickReport.editing == true)
+						$scope.tabs.quickReport.editing = false;
+					else
+						$scope.tabs.quickReport.editing = true;
+				break;
+				case "myTeamFolders":
+					if($scope.tabs.myTeamFolders.editing == true)
+						$scope.tabs.myTeamFolders.editing = false;
+					else
+						$scope.tabs.myTeamFolders.editing = true;
+				break;
+				default: break;
+			}	
+		}
 
 
+		$scope.getUrlsNonEmpty = function(urlsArray){
+			if(urlsArray){
+				var tempUrls = [];
+				for(var i = 0; i < urlsArray.length; i++){
+					if(urlsArray[i].title != ""){
+						tempUrls.push(urlsArray[i]);
+					}
+				}
+				return tempUrls;
+			}else
+				return [];
+		}
 
-
+		$scope.$watchCollection(function(){
+			// console.log("")
+		});
 
 
 	}]);

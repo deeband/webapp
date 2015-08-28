@@ -129,6 +129,15 @@
 				}
 			},
 
+			saveContentInLocalStorage: function(content){
+				debugger;
+				var dataToSave = {
+					"quickReport": content.quickReport,
+					"myTeamFolders": content.myTeamFolders
+				};
+				localStorage.setItem("WebApp", JSON.stringify(dataToSave));
+			},
+
 			defaultUrlContent:[{
 				"url":"",
 				"title":""
