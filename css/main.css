@@ -441,18 +441,85 @@ a.button:focus{
     margin: 25%;
 }
 
+/*************************/
+/*  CSS for url manager  */
+/*************************/
+
 .urls-manager{
     position: absolute;
+    width: 100%;
+    display: block;
+    background-color: white;
+    top: 50px;
+    padding: 16px 0;
+    box-shadow: 0px 5px 9px -3px rgba(0,0,0,.4);
+    visibility: hidden;
+    max-height: 0;
+    z-index: 100;
+    overflow: hidden;
 }
 
 .urls-manager.editing{
-
+    visibility: visible;
+    max-height: 100%;
 }
+
+.report-container{
+    width: 94%;
+    margin: 4px 0;
+    position: relative;
+    left: 3%;
+    background-color: #c8c8c8;
+    line-height: 40px;
+    height: 40px;
+    border: 1px solid rgba(0,0,0,.2);
+    text-align: center;
+    overflow: hidden;
+}
+.report-row-title{
+    max-width: 100px;
+    text-overflow: clip;
+    white-space: nowrap;
+}
+.report-name{
+    display: inline;
+    margin-right: 12px;
+}
+.report-input{
+    padding: 3px 9px;
+}
+
+.submit-container{
+    height: 30px;
+    margin: 15px 30px 0px;
+}
+.cancel-button{
+    position: absolute;
+    right: 106px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+.save-button{
+    position: absolute;
+    right: 30px;
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
 
 
 
 /*********************/
-/*  C SS for icons   */
+/*  CSS for icons   */
 /*********************/
 [class^="icon-"], [class*=" icon-"] {
     font-family: 'icons';
