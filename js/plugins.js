@@ -130,12 +130,21 @@
 			},
 
 			saveContentInLocalStorage: function(content){
-				debugger;
 				var dataToSave = {
 					"quickReport": content.quickReport,
 					"myTeamFolders": content.myTeamFolders
 				};
 				localStorage.setItem("WebApp", JSON.stringify(dataToSave));
+			},
+
+			getFirstUrl: function(urls){
+				for(var i=0; i<urls.length; i++){
+					if(urls[i].title != "" && urls[i].url != ""){
+						return urls[i].url;
+						break;
+					}
+				}
+				return -1;
 			},
 
 			defaultUrlContent:[{
