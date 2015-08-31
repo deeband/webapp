@@ -1,5 +1,4 @@
 (function(angular) {
-  'use strict';
 	angular.module('WebApp').factory('UTILS', ["$timeout", "$http", function($timeout, $http){
 
 		return {

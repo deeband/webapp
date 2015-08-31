@@ -1,6 +1,5 @@
 var ngScope;
 (function(angular) {
-  	'use strict';
   	angular.module('WebApp', ['ngSanitize']);
 	angular.module('WebApp').controller('MainCtrl', ["$rootScope", "$scope", "$sce", "$timeout", "$window", "UTILS", "$filter",
 		function($rootScope, $scope, $sce, $timeout, $window, UTILS, $filter){
@@ -161,7 +160,7 @@ var ngScope;
 		$scope.getUrl = function(url){
 			if(url)
 				return $sce.trustAsResourceUrl(url.url);
-			return url.url;
+			return '';
 		}
 
 		/**
@@ -211,7 +210,6 @@ var ngScope;
 			switch(action){
 				case "quickReport":
 
-					debugger;
 					function checkValidInputs1(index, callback){
 						if($("#reportName"+index).val() != "" && $("#reportURL"+index).val() != ""){
 							if(UTILS.isUrl($("#reportURL"+index).val())){
