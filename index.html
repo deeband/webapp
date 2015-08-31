@@ -69,11 +69,9 @@
                     <div class="tabs-contentainer" ng-switch="selectedTab">
                         <div class="tab-content" ng-switch-when="0">
                             <div class="tab-controllers row">
-                                <select class="{{'drop-down-urls '+((getUrlsNonEmpty(tabs.quickReport.urls).length != 0)?'':'invisible')}}">
-                                    <option value="-1">Select URL</option>
-                                    <option selected="{{((tabs.quickReport.selectedUrl == url.url)?'selected':'')}}" ng-repeat="url in getUrlsNonEmpty(tabs.quickReport.urls)" value="{{url.url}}" ng-click="tabs.quickReport.selectedUrl = url.url;">{{url.title}}</option>
-                                </select>
-                                <div class="{{'open-newtab-button '+((tabs.quickReport.selectedUrl != -1)?'':'invisible')}}" tabindex="0" ng-click="openNewTab(tabs.quickReport.selectedUrl)">
+                                <select class="{{'drop-down-urls '+((HoldQuickReportUrl.length == 0)?'invisible':'')}}" ng-options="url.title for url in HoldQuickReportUrl" ng-model="quickReportSelectedUrl" ng-change="quickReportSelectedUrlChange(quickReportSelectedUrl);"
+                                ></select>
+                                <div class="{{'open-newtab-button '+((HoldQuickReportUrl.length > 0)?'':'invisible')}}" tabindex="0" ng-click="openNewTab(quickReportSelectedUrl)">
                                     <img src="img/expand.png" />
                                 </div>
                                 <div class="tab-settings-button" ng-click="toggleEditing('quickReport');" tabindex="0">
@@ -121,7 +119,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <iframe class="{{'tab-iframe '+((getUrlsNonEmpty(tabs.quickReport.urls).length != 0)?'':'invisible')}}" ng-src="{{((tabs.quickReport.selectedUrl != -1)? getUrl(tabs.quickReport.selectedUrl):'')}}"></iframe>
+                                <iframe ng-hide="checkUrls(tabs.quickReport.urls) == true" class="tab-iframe" ng-src="{{((tabs.quickReport.selectedUrl != -1)? getUrl(quickReportSelectedUrl):'')}}"></iframe>
                             </div>
                         </div>
                         <div class="tab-content" ng-switch-when="1">
@@ -136,11 +134,9 @@
                         </div>
                         <div class="tab-content" ng-switch-when="2">
                             <div class="tab-controllers row">
-                                <select class="{{'drop-down-urls '+((getUrlsNonEmpty(tabs.myTeamFolders.urls).length != 0)?'':'invisible')}}">
-                                    <option value="-1">Select URL</option>
-                                    <option selected="{{((tabs.myTeamFolders.selectedUrl == url.url)?'selected':'')}}" ng-repeat="url in getUrlsNonEmpty(tabs.myTeamFolders.urls)" value="{{url.url}}" ng-click="tabs.myTeamFolders.selectedUrl = url.url;">{{url.title}}</option>
-                                </select>
-                                <div class="{{'open-newtab-button '+((tabs.myTeamFolders.selectedUrl != -1)?'':'invisible')}}" tabindex="0" ng-click="openNewTab(tabs.myTeamFolders.selectedUrl)">
+                                <select class="{{'drop-down-urls '+((HoldTeamFolderUrl.length == 0)?'invisible':'')}}" ng-options="url.title for url in HoldTeamFolderUrl" ng-model="TeamFolderSelectedUrl" ng-change="TeamFolderSelectedUrlChange(TeamFolderSelectedUrl);"
+                                ></select>
+                                <div class="{{'open-newtab-button '+((HoldTeamFolderUrl.length > 0)?'':'invisible')}}" tabindex="0" ng-click="openNewTab(TeamFolderSelectedUrl)">
                                     <img src="img/expand.png" />
                                 </div>
                                 <div class="tab-settings-button" ng-click="toggleEditing('myTeamFolders');" tabindex="0">
@@ -152,11 +148,11 @@
                                     <div class="col report-row-title">Report 4:</div>
                                     <div class="col" style="min-width: 305px; text-align: right;">
                                         <p class="report-name">Name</p>
-                                        <input id="reportName4" class="report-input" type="text" placeholder="Site name"/>
+                                        <input id="teamFolderName1" class="report-input" type="text" placeholder="Site name"/>
                                     </div>
                                     <div class="col" style="min-width: 305px;">
                                         <p class="report-name">URL</p>
-                                        <input id="reportURL4" class="report-input" type="text" placeholder="Site name"/>
+                                        <input id="teamFolderURL1" class="report-input" type="text" placeholder="Site name"/>
                                     </div>
                                     
                                 </div>
@@ -164,22 +160,22 @@
                                     <div class="col report-row-title">Report 5:</div>
                                     <div class="col" style="min-width: 305px; text-align: right;">
                                         <p class="report-name">Name</p>
-                                        <input id="reportName5" class="report-input" type="text" placeholder="Site name"/>
+                                        <input id="teamFolderName2" class="report-input" type="text" placeholder="Site name"/>
                                     </div>
                                     <div class="col" style="min-width: 305px;">
                                         <p class="report-name">URL</p>
-                                        <input id="reportURL5" class="report-input" type="text" placeholder="Site name"/>
+                                        <input id="teamFolderURL2" class="report-input" type="text" placeholder="Site name"/>
                                     </div>
                                 </div>
                                 <div class="report-container row">
                                     <div class="col report-row-title">Report 6:</div>
                                     <div class="col" style="min-width: 305px; text-align: right;">
                                         <p class="report-name">Name</p>
-                                        <input id="reportName6" class="report-input" type="text" placeholder="Site name"/>
+                                        <input id="teamFolderName3" class="report-input" type="text" placeholder="Site name"/>
                                     </div>
                                     <div class="col" style="min-width: 305px;">
                                         <p class="report-name">URL</p>
-                                        <input id="reportURL6" class="report-input" type="text" placeholder="Site name"/>
+                                        <input id="teamFolderURL3" class="report-input" type="text" placeholder="Site name"/>
                                     </div>
                                 </div>
                                 <div class="submit-container">
@@ -188,7 +184,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <iframe class="{{'tab-iframe '+((getUrlsNonEmpty(tabs.myTeamFolders.urls).length != 0)?'':'invisible')}}" ng-src="{{((tabs.myTeamFolders.selectedUrl != -1)? getUrl(tabs.myTeamFolders.selectedUrl):'')}}"></iframe>
+                                <iframe ng-hide="checkUrls(tabs.myTeamFolders.urls) == true" class="tab-iframe" ng-src="{{((tabs.myTeamFolders.selectedUrl != -1)? getUrl(TeamFolderSelectedUrl):'')}}"></iframe>
                             </div>
                         </div>
                         <div class="tab-content" ng-switch-when="3">
