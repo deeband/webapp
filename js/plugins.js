@@ -147,6 +147,28 @@
 				return -1;
 			},
 
+			isUrl: function(url){
+				var x = /^((?:http|ftp)s?:\/\/)(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|localhost|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::\d+)?(?:\/?|[\/?]\S+)$/i;
+				return x.test(url);
+			},
+			
+			emptyUrl: function(item){
+				return item.title != '';
+			},
+			
+			getUrlsNonEmpty: function(urlsArray){
+				if(urlsArray){
+					var tempUrls = [];
+					for(var i = 0; i < urlsArray.length; i++){
+						if(urlsArray[i].title != null && urlsArray[i].title != ""){
+							tempUrls.push(urlsArray[i]);
+						}
+					}
+					return tempUrls;
+				}else
+					return [];
+			},
+
 			defaultUrlContent:[{
 				"url":"",
 				"title":""
@@ -213,7 +235,18 @@
 				});
 			}
 		}
-	})
+	}).directive('ngEnter', function() {
+        return function($scope, $element, $attrs) {
+            $element.bind("keydown keypress", function(event) {
+                if (event.which === 13) {
+                    $scope.$eval($attrs.ngEnter, {
+                        'event': event
+                    });
+                    event.preventDefault();
+                }
+            });
+        };
+    })
 
 	/**
 	 * Tab factory used to favorite urls tabs

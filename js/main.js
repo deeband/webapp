@@ -1,14 +1,23 @@
+var ngScope;
 (function(angular) {
   	'use strict';
   	angular.module('WebApp', ['ngSanitize']);
-	angular.module('WebApp').controller('MainCtrl', ["$rootScope", "$scope", "$sce", "$timeout", "$window", "UTILS",
-		function($rootScope, $scope, $sce, $timeout, $window, UTILS){
+	angular.module('WebApp').controller('MainCtrl', ["$rootScope", "$scope", "$sce", "$timeout", "$window", "UTILS", "$filter",
+		function($rootScope, $scope, $sce, $timeout, $window, UTILS, $filter){
 
 		$scope.selectedTab;   			// Holding selected tab
 		$scope.notification;  			// Holding notification data
 		$scope.topButtons;	  			// Holding buttons description and links
 		$scope.tabs = {};	 	  			// Holding tabs data
 		$scope.appInitialized = false;	// Hide binding data before initlized
+		$scope.quickReportSelectedUrl = -1;
+		$scope.TeamFolderSelectedUrl = -1;
+		$scope.HoldQuickReportUrl = [];
+		$scope.HoldTeamFolderUrl = [];
+
+		// For Debugging
+		var appElement = document.querySelector('[ng-controller=MainCtrl]');
+        ngScope = angular.element(appElement).scope();
 
 		/**
 		 * Initialize application parameters and loading data from ajax
@@ -54,9 +63,9 @@
 					// Get related tabs links
 					// Check if there is old stored content in local storage
 					$scope.tabs["quickReport"] = UTILS.checkStoredUrls("quickReport");
-					$scope.tabs["myFolders"] = data.tabsList[1].options.url;
+					$scope.tabs["myFolders"] = {"url":data.tabsList[1].options.url};
 					$scope.tabs["myTeamFolders"] = UTILS.checkStoredUrls("myTeamFolders");
-					$scope.tabs["publicFolders"] = data.tabsList[3].options.url;
+					$scope.tabs["publicFolders"] = {"url":data.tabsList[3].options.url};
 
 
 				}else{
@@ -74,13 +83,13 @@
 							selectedUrl: -1,
 							editing: true
 						},
-						"myFolders":"",
+						"myFolders":{"url":""},
 						"myTeamFolders":{
 							urls: UTILS.defaultUrlContent,
 							selectedUrl: -1,
 							editing: true
 						},
-						"publicFolders":""
+						"publicFolders":{"url":""}
 					};
 				}
 
@@ -102,6 +111,12 @@
 				UTILS.animatePageLoad(false,function(){
 					$scope.appInitialized = true;
 				});
+
+				$scope.HoldQuickReportUrl = $filter('filter')($scope.tabs["quickReport"].urls, UTILS.emptyUrl);
+				$scope.HoldTeamFolderUrl = $filter('filter')($scope.tabs["myTeamFolders"].urls, UTILS.emptyUrl);
+				$scope.quickReportSelectedUrl = $scope.HoldQuickReportUrl[0];
+				$scope.TeamFolderSelectedUrl = $scope.HoldTeamFolderUrl[0];
+
 			});
 		}
 		$scope.initializeApp();
@@ -128,7 +143,9 @@
 		 * @return {String}     url if is valid URL else ''
 		 */
 		$scope.getUrl = function(url){
-			return $sce.trustAsResourceUrl(url);
+			if(url)
+				return $sce.trustAsResourceUrl(url.url);
+			return '';
 		}
 
 		/**
@@ -162,47 +179,99 @@
 					$("#reportURL3").val($scope.tabs.quickReport.urls[2].url);
 				break;
 				case "myTeamFolders":
-					$("#reportName1").val($scope.tabs.myTeamFolders.urls[0].title);
-					$("#reportURL1").val($scope.tabs.myTeamFolders.urls[0].url);
-					$("#reportName2").val($scope.tabs.myTeamFolders.urls[1].title);
-					$("#reportURL2").val($scope.tabs.myTeamFolders.urls[1].url);
-					$("#reportName3").val($scope.tabs.myTeamFolders.urls[2].title);
-					$("#reportURL3").val($scope.tabs.myTeamFolders.urls[2].url);
+					$scope.tabs.myTeamFolders.editing = false;
+					$("#teamFolderName1").val($scope.tabs.myTeamFolders.urls[0].title);
+					$("#teamFolderURL1").val($scope.tabs.myTeamFolders.urls[0].url);
+					$("#teamFolderName2").val($scope.tabs.myTeamFolders.urls[1].title);
+					$("#teamFolderURL2").val($scope.tabs.myTeamFolders.urls[1].url);
+					$("#teamFolderName3").val($scope.tabs.myTeamFolders.urls[2].title);
+					$("#teamFolderURL3").val($scope.tabs.myTeamFolders.urls[2].url);
 				break;
 				default: break;
 			}
 		}
 		$scope.saveEditUrls = function(action){
+			$scope.notification = {};
 			switch(action){
 				case "quickReport":
-					$scope.tabs.quickReport.editing = false;
-					$scope.tabs.quickReport.urls = [{
-						title: $("#reportName1").val(),
-						url: $("#reportURL1").val()
-					},{
-						title: $("#reportName2").val(),
-						url: $("#reportURL2").val()
-					},{
-						title: $("#reportName3").val(),
-						url: $("#reportURL3").val()
-					}];
+
+					debugger;
+					function checkValidInputs1(index, callback){
+						if($("#reportName"+index).val() != "" && $("#reportURL"+index).val() != ""){
+							if(UTILS.isUrl($("#reportURL"+index).val())){
+								$scope.tabs.quickReport.urls[index-1]	= {title:$("#reportName"+index).val(), url:$("#reportURL"+index).val()};
+								callback();
+							}else{
+								$scope.notification = {
+									message:"ERROR: Not Valid Url!",
+									style:{
+										"color":"rgb(234, 47, 64)"
+									}
+								};
+							}
+						}else if($("#reportName"+index).val() == "" && $("#reportURL"+index).val() == ""){
+							$scope.tabs.quickReport.urls[index-1]	= {title:$("#reportName"+index).val(), url:$("#reportURL"+index).val()};
+							callback();
+						}else{
+							$scope.notification = {
+								message:"ERROR: You Must Specified (title, url).",
+								style:{
+									"color":"rgb(234, 47, 64)"
+								}
+							};
+						}
+					}
+					checkValidInputs1(1, function(){
+						checkValidInputs1(2, function(){
+							checkValidInputs1(3, function(){
+								$scope.tabs.quickReport.editing = false;
+								$scope.HoldQuickReportUrl = $filter('filter')($scope.tabs["quickReport"].urls, UTILS.emptyUrl);
+								$scope.quickReportSelectedUrl = $scope.HoldQuickReportUrl[0];
+								UTILS.saveContentInLocalStorage($scope.tabs);
+							});
+						});
+					});
 				break;
 				case "myTeamFolders":
-					$scope.tabs.myTeamFolders.editing = false;
-					$scope.tabs.myTeamFolders.urls = [{
-						title: $("#teamFolderName1").val(),
-						url: $("#teamFolderURL1").val()
-					},{
-						title: $("#teamFolderName2").val(),
-						url: $("#teamFolderURL2").val()
-					},{
-						title: $("#teamFolderName3").val(),
-						url: $("#teamFolderURL3").val()
-					}];
+					
+					function checkValidInputs(index, callback){
+						if($("#teamFolderName"+index).val() != "" && $("#teamFolderURL"+index).val() != ""){
+							if(UTILS.isUrl($("#teamFolderURL"+index).val())){
+								$scope.tabs.myTeamFolders.urls[index-1]	= {title:$("#teamFolderName"+index).val(), url:$("#teamFolderURL"+index).val()};
+								callback();
+							}else{
+								$scope.notification = {
+									message:"ERROR: Not Valid Url!",
+									style:{
+										"color":"rgb(234, 47, 64)"
+									}
+								};
+							}
+						}else if($("#teamFolderName"+index).val() == "" && $("#teamFolderURL"+index).val() == ""){
+							$scope.tabs.myTeamFolders.urls[index-1]	= {title:$("#teamFolderName"+index).val(), url:$("#teamFolderURL"+index).val()};
+							callback();
+						}else{
+							$scope.notification = {
+								message:"ERROR: You Must Specified (title, url).",
+								style:{
+									"color":"rgb(234, 47, 64)"
+								}
+							};
+						}
+					}
+					checkValidInputs(1, function(){
+						checkValidInputs(2, function(){
+							checkValidInputs(3, function(){
+								$scope.tabs.myTeamFolders.editing = false;
+								$scope.HoldTeamFolderUrl = $filter('filter')($scope.tabs["myTeamFolders"].urls, UTILS.emptyUrl);
+								$scope.TeamFolderSelectedUrl = $scope.HoldTeamFolderUrl[0];
+								UTILS.saveContentInLocalStorage($scope.tabs);
+							});
+						});
+					});
 				break;
 				default: break;
 			}
-			UTILS.saveContentInLocalStorage($scope.tabs);
 		}
 
 		$scope.toggleEditing = function(action){
@@ -225,12 +294,12 @@
 						$scope.tabs.myTeamFolders.editing = false;
 					else{
 						$scope.tabs.myTeamFolders.editing = true;
-						$("#reportName1").val($scope.tabs.myTeamFolders.urls[0].title);
-						$("#reportURL1").val($scope.tabs.myTeamFolders.urls[0].url);
-						$("#reportName2").val($scope.tabs.myTeamFolders.urls[1].title);
-						$("#reportURL2").val($scope.tabs.myTeamFolders.urls[1].url);
-						$("#reportName3").val($scope.tabs.myTeamFolders.urls[2].title);
-						$("#reportURL3").val($scope.tabs.myTeamFolders.urls[2].url);
+						$("#teamFolderName1").val($scope.tabs.myTeamFolders.urls[0].title);
+						$("#teamFolderURL1").val($scope.tabs.myTeamFolders.urls[0].url);
+						$("#teamFolderName2").val($scope.tabs.myTeamFolders.urls[1].title);
+						$("#teamFolderURL2").val($scope.tabs.myTeamFolders.urls[1].url);
+						$("#teamFolderName3").val($scope.tabs.myTeamFolders.urls[2].title);
+						$("#teamFolderURL3").val($scope.tabs.myTeamFolders.urls[2].url);
 					}
 				break;
 				default: break;
@@ -238,23 +307,66 @@
 		}
 
 
-		$scope.getUrlsNonEmpty = function(urlsArray){
-			if(urlsArray){
-				var tempUrls = [];
-				for(var i = 0; i < urlsArray.length; i++){
-					debugger;
-					if(urlsArray[i].title != ""){
-						tempUrls.push(urlsArray[i]);
-					}
-				}
-				return tempUrls;
-			}else
-				return [];
+
+
+		$scope.quickReportSelectedUrlChange = function(newUrl){
+			$timeout(function(){$scope.$apply(function(){
+				$scope.quickReportSelectedUrl = newUrl;
+				$scope.tabs["quickReport"].selectedUrl = newUrl;
+				UTILS.saveContentInLocalStorage($scope.tabs);
+			});},1);
+		}
+		$scope.TeamFolderSelectedUrlChange = function(newUrl){
+			$timeout(function(){$scope.$apply(function(){
+				$scope.TeamFolderSelectedUrl = newUrl;
+				$scope.tabs["myTeamFolders"].selectedUrl = newUrl;
+				UTILS.saveContentInLocalStorage($scope.tabs);
+			});},1);
 		}
 
-		$scope.urlchange = function(tab){
-			console.log(tab);
+
+		$scope.searchForText = function(text){
+			if(text != ""){
+				debugger;
+				var found = false;
+				for(var i = 0; i < $scope.HoldQuickReportUrl.length; i++){
+					if($scope.HoldQuickReportUrl[i].title.indexOf(text) != -1){
+						focusUrl('quickReport', i);
+						found = true;
+						break;
+					}
+				}
+				for(var i = 0; i < $scope.HoldTeamFolderUrl.length; i++){
+					if($scope.HoldTeamFolderUrl[i].title.indexOf(text) != -1){
+						focusUrl('myTeamFolders', i);
+						found = true;
+						break;
+					}
+				}
+				if(found == false){
+					$scope.$apply(function(){
+						$scope.notification = {
+							message: "The searched report \""+text+"\" was not found."
+						};
+					});
+				}else{
+					$scope.notification = {};
+				}
+			}else{
+				$scope.notification = {};
+			}
+
+			function focusUrl(urlType, urlIndex){
+				if(urlType == "quickReport"){
+					$('.tab-buttons > a')[0].click();
+					$scope.quickReportSelectedUrl = $scope.HoldQuickReportUrl[urlIndex];
+				}else if(urlType == "myTeamFolders"){
+					$('.tab-buttons > a')[2].click();
+					$scope.TeamFolderSelectedUrl = $scope.HoldTeamFolderUrl[urlIndex];
+				}
+			}
 		}
+
 
 
 	}]);
