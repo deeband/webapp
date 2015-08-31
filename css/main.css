@@ -392,6 +392,7 @@ a.button:focus{
     height: 550px;
     position: absolute;
     border: 0;
+    background-color: white; 
     top: 50px;
 }
 

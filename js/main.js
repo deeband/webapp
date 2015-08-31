@@ -161,7 +161,7 @@ var ngScope;
 		$scope.getUrl = function(url){
 			if(url)
 				return $sce.trustAsResourceUrl(url.url);
-			return '';
+			return url.url;
 		}
 
 		/**
