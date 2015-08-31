@@ -116,6 +116,22 @@ var ngScope;
 				$scope.HoldTeamFolderUrl = $filter('filter')($scope.tabs["myTeamFolders"].urls, UTILS.emptyUrl);
 				$scope.quickReportSelectedUrl = $scope.HoldQuickReportUrl[0];
 				$scope.TeamFolderSelectedUrl = $scope.HoldTeamFolderUrl[0];
+				if($scope.tabs["quickReport"].selectedUrl != -1){
+					for(var i=0; i<$scope.HoldQuickReportUrl.length; i++){
+						if($scope.HoldQuickReportUrl[i].url == $scope.tabs["quickReport"].selectedUrl.url){
+							$scope.quickReportSelectedUrl = $scope.HoldQuickReportUrl[i];
+							break;
+						}
+					}
+				}
+				if($scope.tabs["myTeamFolders"].selectedUrl != -1){
+					for(var i=0; i<$scope.HoldTeamFolderUrl.length; i++){
+						if($scope.HoldTeamFolderUrl[i].url == $scope.tabs["myTeamFolders"].selectedUrl.url){
+							$scope.TeamFolderSelectedUrl = $scope.HoldTeamFolderUrl[i];
+							break;
+						}
+					}
+				}
 
 			});
 		}
@@ -327,7 +343,6 @@ var ngScope;
 
 		$scope.searchForText = function(text){
 			if(text != ""){
-				debugger;
 				var found = false;
 				for(var i = 0; i < $scope.HoldQuickReportUrl.length; i++){
 					if($scope.HoldQuickReportUrl[i].title.indexOf(text) != -1){
@@ -336,19 +351,23 @@ var ngScope;
 						break;
 					}
 				}
-				for(var i = 0; i < $scope.HoldTeamFolderUrl.length; i++){
-					if($scope.HoldTeamFolderUrl[i].title.indexOf(text) != -1){
-						focusUrl('myTeamFolders', i);
-						found = true;
-						break;
-					}
-				}
 				if(found == false){
-					$scope.$apply(function(){
-						$scope.notification = {
-							message: "The searched report \""+text+"\" was not found."
-						};
-					});
+					for(var i = 0; i < $scope.HoldTeamFolderUrl.length; i++){
+						if($scope.HoldTeamFolderUrl[i].title.indexOf(text) != -1){
+							focusUrl('myTeamFolders', i);
+							found = true;
+							break;
+						}
+					}
+					if(found == false){
+						$scope.$apply(function(){
+							$scope.notification = {
+								message: "The searched report \""+text+"\" was not found."
+							};
+						});
+					}else{
+						$scope.notification = {};
+					}
 				}else{
 					$scope.notification = {};
 				}
@@ -360,6 +379,7 @@ var ngScope;
 				if(urlType == "quickReport"){
 					$('.tab-buttons > a')[0].click();
 					$scope.quickReportSelectedUrl = $scope.HoldQuickReportUrl[urlIndex];
+					$scope.quickReportSelectedUrlChange($scope.quickReportSelectedUrl);
 				}else if(urlType == "myTeamFolders"){
 					$('.tab-buttons > a')[2].click();
 					$scope.TeamFolderSelectedUrl = $scope.HoldTeamFolderUrl[urlIndex];

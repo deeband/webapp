@@ -184,7 +184,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <iframe ng-hide="checkUrls(tabs.myTeamFolders.urls) == true" class="tab-iframe" ng-src="{{((tabs.myTeamFolders.selectedUrl != -1)? getUrl(TeamFolderSelectedUrl):'')}}"></iframe>
+                                <iframe class="{{'tab-iframe '+((HoldTeamFolderUrl.length == 0)?'invisible':'')}}" ng-src="{{((TeamFolderSelectedUrl != -1)? getUrl(TeamFolderSelectedUrl):'')}}"></iframe>
                             </div>
                         </div>
                         <div class="tab-content" ng-switch-when="3">

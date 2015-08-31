@@ -119,7 +119,7 @@
 			 */
 			checkStoredUrls: function(tabType){
 				try{
-					return JSON.parse(localStorage["WebApp"])[tabType];
+					return JSON.parse(localStorage["WebAppUnivLocalStorage"])[tabType];
 				}catch(e){
 					return {
 						urls: this.defaultUrlContent,
@@ -134,7 +134,7 @@
 					"quickReport": content.quickReport,
 					"myTeamFolders": content.myTeamFolders
 				};
-				localStorage.setItem("WebApp", JSON.stringify(dataToSave));
+				localStorage.setItem("WebAppUnivLocalStorage", JSON.stringify(dataToSave));
 			},
 
 			getFirstUrl: function(urls){
